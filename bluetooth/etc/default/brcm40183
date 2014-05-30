@@ -1,0 +1,3 @@
+# MAC address for Bluetooth module supplied by brcm40183 chip
+
+MAC_ADDR=43:29:B1:55:01:01
