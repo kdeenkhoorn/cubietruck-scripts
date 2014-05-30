@@ -9,6 +9,7 @@ For example:
 
 	~build
 	     |- buildscript.sh
+	     |- cubietruck-configs    git clone of cubietruck-configs repo
 	     |- cubietruck-scripts    git clone of cubietruck-scripts repo
 	     |- linux-sunxi           git clone of linux-sunxi repo
 
