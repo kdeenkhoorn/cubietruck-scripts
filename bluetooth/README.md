@@ -5,9 +5,14 @@ The file ./etc/init.d/brcm40183-patch uploads the firmware to the brcm40183 at b
 
 It has the following dependencies:
 
+#Bluez package
+This package supplies the commands hcitool and hciattach and can be installed by:
+
+	apt-get install bluez
+
 #/etc/default/brcm40183
-This file contains the default MAC Address to be used by the chipset.
-If this file does not exists a default address wil be selected. 
+This file contains the default MAC Address and portname to be used to flash the chipset.
+If this file does not exists a default address and port wil be selected. 
 
 #/usr/local/bin/brcm_patchram_plus
 Utility to upload the firmware to the bluetooth chip.
@@ -21,8 +26,21 @@ If not the upload starts with a command time-out of 60 seconds in case the uploa
 Logging from the upload can be found in /var/log/brcm40183.firmware .
 
 
-Activation:
+#Activation:
+Copy the file ./etc/init.d/brcm40183-patch to /etc/init.d as root and make it executable:
+
+	cp brcm40183-patch /etc/init.d
+	chmod 755 /etc/init.d/brcm40183-patch
+
+Copy the file ./etc/default/brcm40183 to /etc/default as root and make it executable:
+
+	cp brcm40183 /etc/default
+	chmod 755 /etc/default/brcm40183
+
+Review this file and change it if needed.
+
 The execution at boot time can be activated by using the command:
 
 	insserv brcm40183-patch
- 
+
+Have fun! 

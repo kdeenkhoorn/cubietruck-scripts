@@ -1,11 +1,11 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          brcm40183-patch
-# Required-Start:
-# Required-Stop:
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
 # Should-Start:      brcm_patchram_plus
 # Default-Start:     S
-# Default-Stop:
+# Default-Stop:      
 # Short-Description: Patch firmware for brcm40183 Bluetooth adapter
 # Description:       Patch firmware for brcm40183 Bluetooth adapter
 ### END INIT INFO
@@ -35,31 +35,31 @@ else
        MAC_OPTIONS="--bd_addr $MAC_ADDR"
     fi
 
-    # Selection for CubieTruck (CubieBoard 3)
-    if [ -n "$(/bin/cat /sys/class/rfkill/*/name | /bin/grep brcm40183)" ]; then
-      PORT=$(/bin/ls /sys/devices/platform/sunxi-uart.2/tty/)
-      /bin/echo -en "" > /dev/$PORT      # pull down RTS on UART
+    # Select tty port
+    if [ -z "$PORT" ]; then
+       echo "Warning: No PORT set in /etc/default/brcm40183, will use ttyS1"
+       PORT="ttyS1"
+    fi
 
-      /bin/echo -en "Info: Start pushing firmware to device and waiting max. 60sec to complete ... "
+    # Start patching
+    /bin/echo -en "" > /dev/$PORT      # pull down RTS on UART
+    /bin/echo -en "Info: Start pushing firmware to device and waiting max. 60sec to complete ... "
 
-      /usr/bin/timeout 60s /usr/local/bin/brcm_patchram_plus -d --patchram /lib/firmware/ap6210/bcm20710a1.hcd --enable_hci --no2bytes --tosleep 1000 $MAC_OPTIONS /dev/$PORT > /var/log/brcm40183.firmware 2>&1
+    /usr/bin/timeout 60s /usr/local/bin/brcm_patchram_plus -d --patchram /lib/firmware/ap6210/bcm20710a1.hcd --enable_hci --no2bytes --tosleep 1000 $MAC_OPTIONS /dev/$PORT > /var/log/brcm40183.firmware 2>&1
 
-      if [ $? -ne 0 ]
-      then
+    if [ $? -ne 0 ]
+    then
          /bin/echo "terminated!"
          /bin/echo "Error: Check /var/log/brcm40183.firmware for messages."
-      else
+         exit 1
+    else
          /bin/echo "finished."
 
          # Enable interfaces
          /usr/sbin/hciattach /dev/$PORT any
 
-      fi
-    else
-      /bin/echo "Warning: No brcm40183 device Found."
-      exit 1
     fi
-  fi
+fi
 }
 
 case "$1" in
