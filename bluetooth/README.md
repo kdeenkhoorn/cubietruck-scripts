@@ -22,7 +22,7 @@ Originals ar at https://code.google.com/p/broadcom-bluetooth/ .
 #/etc/init.d/brcm40183-patch
 This script will start the firmware upload at boot time.
 It checks if the firmware has allready been uploaded by checking the existents of a hci(x) device.
-If not the upload starts with a command time-out of 60 seconds in case the upload goes wrong some how.
+If not, the upload starts with a command time-out of 60 seconds in case the upload goes wrong some how.
 Logging from the upload can be found in /var/log/brcm40183.firmware .
 
 
