@@ -10,6 +10,12 @@ This package supplies the commands hcitool and hciattach and can be installed by
 
 	apt-get install bluez
 
+
+#Bluetooth libraries to support brcm_patchram_plus
+The following libraries are required to support brcm_patchram_plus:
+
+	apt-get install libbluetooth3 libbluetooth-dev
+
 #/etc/default/brcm40183
 This file contains the default MAC Address and portname to be used to flash the chipset.
 If this file does not exists a default address and port wil be selected. 
