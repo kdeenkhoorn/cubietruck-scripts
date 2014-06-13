@@ -24,12 +24,13 @@ do_start () {
 
 if [ ! -z $(/usr/sbin/hciconfig | /bin/grep UART | /usr/bin/cut -d: -f1) ]
 then
-    /bin/echo "Info: brcm40183 device allready initialized:"
+    log_action_begin_msg "brcm40183 device allready initialized"
+    log_action_end_msg 0
     /usr/bin/hcitool dev
 else
     # Select MAC address
     if [ -z "$MAC_ADDR" ]; then
-       echo "Warning: No MAC_ADDR set in /etc/default/brcm40183, will use MAC 11:22:33:44:55:66"
+       log_warning_msg "No MAC_ADDR set in /etc/default/brcm40183, will use MAC 11:22:33:44:55:66"
        MAC_OPTIONS="--bd_addr 11:22:33:44:55:66"
     else
        MAC_OPTIONS="--bd_addr $MAC_ADDR"
@@ -37,28 +38,25 @@ else
 
     # Select tty port
     if [ -z "$PORT" ]; then
-       echo "Warning: No PORT set in /etc/default/brcm40183, will use ttyS1"
+       log_warning_msg "No PORT set in /etc/default/brcm40183, will use ttyS1"
        PORT="ttyS1"
     fi
 
     # Start patching
     /bin/echo -en "" > /dev/$PORT      # pull down RTS on UART
-    /bin/echo -en "Info: Start pushing firmware to device and waiting max. 60sec to complete ... "
+    log_action_begin_msg  "Start pushing firmware to device and waiting max. 60sec to complete"
 
     /usr/bin/timeout 60s /usr/local/bin/brcm_patchram_plus -d --patchram /lib/firmware/ap6210/bcm20710a1.hcd --enable_hci --no2bytes --tosleep 1000 $MAC_OPTIONS /dev/$PORT > /var/log/brcm40183.firmware 2>&1
 
-    if [ $? -ne 0 ]
-    then
-         /bin/echo "terminated!"
-         /bin/echo "Error: Check /var/log/brcm40183.firmware for messages."
-         exit 1
-    else
-         /bin/echo "finished."
-
-         # Enable interfaces
-         /usr/sbin/hciattach /dev/$PORT any
-
-    fi
+    case "$?" in
+        0) log_action_end_msg 0
+             # Enable interfaces
+             /usr/sbin/hciattach /dev/$PORT any
+             ;;
+        *) log_action_end_msg 1
+             /bin/echo "Check /var/log/brcm40183.firmware for messages."
+             ;;
+    esac
 fi
 }
 
