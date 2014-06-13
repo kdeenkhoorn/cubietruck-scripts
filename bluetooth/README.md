@@ -47,6 +47,6 @@ Review this file and change it if needed.
 
 The execution at boot time can be activated by using the command:
 
-	insserv brcm40183-patch
+	update-rc.d -f brcm40183-patch defaults
 
 Have fun! 
