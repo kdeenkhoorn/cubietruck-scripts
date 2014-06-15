@@ -44,18 +44,27 @@ It checks if the firmware has allready been uploaded by checking the existents o
 If not, the upload starts with a command time-out of 60 seconds in case the upload goes wrong some how.
 Logging from the upload can be found in /var/log/brcm40183.firmware .
 
-#Activation:
+#Installation:
+Install required packages:
+
+	apt-get install bluez libbluetooth3 libbluetooth-dev
+
 Copy the file ./etc/init.d/brcm40183-patch to /etc/init.d as root and make it executable:
 
-	cp brcm40183-patch /etc/init.d
+	cp ./etc/init.d/brcm40183-patch /etc/init.d
 	chmod 755 /etc/init.d/brcm40183-patch
 
 Copy the file ./etc/default/brcm40183 to /etc/default as root and make it executable:
 
-	cp brcm40183 /etc/default
+	cp ./etc/default/brcm40183 /etc/default
 	chmod 755 /etc/default/brcm40183
 
 Review this file and change it if needed.
+
+Copy the file ./usr/local/bin/brcm_patchram_plus to /usr/local/bin as root and make it executable:
+
+	cp ./usr/local/bin/brcm_patchram_plus /usr/local/bin
+	chmod 755 /usr/local/bin/brcm_patchram_plus
 
 The execution at boot time can be activated by using the command:
 
