@@ -1,4 +1,4 @@
 cubietruck-scripts
 ==================
 
-Cubietruck scripts based on debian wheezy
+Cubietruck scripts based on Debian wheezy.
